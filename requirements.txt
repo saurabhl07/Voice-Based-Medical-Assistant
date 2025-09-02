@@ -1,0 +1,8 @@
+streamlit
+torch
+transformers
+python-dotenv
+openai-whisper
+sounddevice
+numpy
+google-genai
