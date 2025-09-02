@@ -1,8 +1,8 @@
 streamlit
+speechrecognition
+pydub
+whisper
+google-genai
+python-dotenv
 torch
 transformers
-python-dotenv
-openai-whisper
-sounddevice
-numpy
-google-genai
