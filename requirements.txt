@@ -1,8 +1,5 @@
 streamlit
+streamlit-audiorec
 speechrecognition
-pydub
-whisper
-google-genai
 python-dotenv
-torch
-transformers
+google-genai
