@@ -1,29 +1,26 @@
+# main.py
+
 import streamlit as st
-import io
-import speech_recognition as sr
-from rag.responder_local import generate_response_local  # Your Gemini logic
-from streamlit_audiorec import st_audiorec
+from audio.transcriber import transcribe_audio
+from rag.responder_local import generate_response_local
 
-st.set_page_config(page_title="Voice-Based Medical Assistant", layout="centered")
+st.set_page_config(page_title="Medical Assistant", layout="centered")
 
-st.title("Voice-Based Medical Assistant (Browser Mic + Gemini API)")
+st.title("Voice-Based Medical Assistant (Offline + Gemini API)")
 st.markdown("**Speak your symptoms and get a medical suggestion.**")
 
-# Browser-based audio recorder
-audio_bytes = st_audiorec()
-
-if audio_bytes:
-    st.audio(audio_bytes, format="audio/wav")
-
-    recognizer = sr.Recognizer()
-    with sr.AudioFile(io.BytesIO(audio_bytes)) as source:
-        audio = recognizer.record(source)
-
-    try:
-        user_input = recognizer.recognize_google(audio)
+if st.button("🎙 Speak Now"):
+    with st.spinner("Listening..."):
+        user_input = transcribe_audio()
+        st.success("Recording complete")
         st.markdown(f"**You said:** `{user_input}`")
-        response, symptoms = generate_response_local(user_input)
+
+    if user_input.strip():
+        with st.spinner("Generating response..."):
+            response, symptoms = generate_response_local(user_input)
+
+        st.success("Done")
         st.markdown(f"**Detected Symptoms:** `{', '.join(symptoms) if symptoms else 'None'}`")
         st.markdown(f"**AI Response:**\n\n{response}")
-    except Exception as e:
-        st.error(f"Could not transcribe audio: {e}")
+    else:
+        st.error("Didn't catch that. Please try again.")
